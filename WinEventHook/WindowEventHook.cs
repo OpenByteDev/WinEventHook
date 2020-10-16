@@ -24,7 +24,7 @@ namespace WinEventHook {
             get => (_hookFlags & WinEventHookFlags.WINEVENT_SKIPOWNPROCESS) == WinEventHookFlags.WINEVENT_SKIPOWNPROCESS;
             set => _hookFlags |= WinEventHookFlags.WINEVENT_SKIPOWNPROCESS;
         }
-        private WinEventHookFlags _hookFlags = WinEventHookFlags.WINEVENT_OUTOFCONTEXT | WinEventHookFlags.WINEVENT_SKIPOWNPROCESS;
+        private WinEventHookFlags _hookFlags = WinEventHookFlags.WINEVENT_OUTOFCONTEXT | WinEventHookFlags.WINEVENT_SKIPOWNPROCESS | WinEventHookFlags.WINEVENT_SKIPOWNTHREAD;
 
         public event WinEventProc? WinEventProc;
 
@@ -64,7 +64,7 @@ namespace WinEventHook {
                 lpfnWinEventProc: eventProc,
                 idProcess: processId,
                 idThread: threadId,
-                dwFlags: WinEventHookFlags.WINEVENT_OUTOFCONTEXT | WinEventHookFlags.WINEVENT_SKIPOWNPROCESS
+                dwFlags: _hookFlags
             );
 
             if (RawHookHandle != IntPtr.Zero) {
