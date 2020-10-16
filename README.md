@@ -1,5 +1,17 @@
 # WinEventHook
+
+![nuget badge](https://badgen.net/nuget/v/wineventhook)
+[![Unlicense](https://img.shields.io/github/license/OpenByteDev/WinEventHook)](./LICENSE)
+
 A managed wrapper over [SetWinEventHook](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwineventhook) and [UnhookWinEvent](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwinevent).
+
+
+## Installation
+
+To install with NuGet use the following command in the Packet Manager Console:
+```
+Install-Package WinEventHook
+```
 
 ## Usage
 Prints all events to the console:
