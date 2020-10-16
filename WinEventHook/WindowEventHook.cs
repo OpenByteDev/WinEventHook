@@ -18,11 +18,19 @@ namespace WinEventHook {
 
         public bool SkipOwnThread {
             get => (_hookFlags & WinEventHookFlags.WINEVENT_SKIPOWNTHREAD) == WinEventHookFlags.WINEVENT_SKIPOWNTHREAD;
-            set => _hookFlags |= WinEventHookFlags.WINEVENT_SKIPOWNTHREAD;
+            set {
+                if (Hooked)
+                    throw new InvalidOperationException("SkipOwnThread cannot be changed while hooked.");
+                _hookFlags = value ? _hookFlags | WinEventHookFlags.WINEVENT_SKIPOWNTHREAD : _hookFlags & ~WinEventHookFlags.WINEVENT_SKIPOWNTHREAD;
+            }
         }
         public bool SkipOwnProcess {
             get => (_hookFlags & WinEventHookFlags.WINEVENT_SKIPOWNPROCESS) == WinEventHookFlags.WINEVENT_SKIPOWNPROCESS;
-            set => _hookFlags |= WinEventHookFlags.WINEVENT_SKIPOWNPROCESS;
+            set {
+                if (Hooked)
+                    throw new InvalidOperationException("SkipOwnThread cannot be changed while hooked.");
+                _hookFlags = value ? _hookFlags | WinEventHookFlags.WINEVENT_SKIPOWNPROCESS : _hookFlags & ~WinEventHookFlags.WINEVENT_SKIPOWNPROCESS;
+            }
         }
         private WinEventHookFlags _hookFlags = WinEventHookFlags.WINEVENT_OUTOFCONTEXT | WinEventHookFlags.WINEVENT_SKIPOWNPROCESS | WinEventHookFlags.WINEVENT_SKIPOWNTHREAD;
 
