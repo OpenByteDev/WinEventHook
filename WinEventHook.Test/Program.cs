@@ -2,8 +2,8 @@
 using System.Runtime.InteropServices;
 
 namespace WinEventHook.Test {
-    class Program {
-        static void Main(string[] args) {
+    public static class Program {
+        public static void Main() {
             // hook logic
             using var hook = new WindowEventHook(WindowEvent.EVENT_MIN, WindowEvent.EVENT_MAX);
             hook.WinEventProc += (hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwmsEventTime) => {
@@ -24,7 +24,7 @@ namespace WinEventHook.Test {
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        struct MSG {
+        internal struct MSG {
             public IntPtr hwnd;
             public uint message;
             public IntPtr wParam;
@@ -34,19 +34,19 @@ namespace WinEventHook.Test {
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        struct POINT {
+        internal struct POINT {
             public int X;
             public int Y;
         }
 
         [DllImport("user32.dll")]
-        static extern int GetMessage(out MSG lpMsg, IntPtr hWnd, uint wMsgFilterMin, uint wMsgFilterMax);
+        internal static extern int GetMessage(out MSG lpMsg, IntPtr hWnd, uint wMsgFilterMin, uint wMsgFilterMax);
 
         [DllImport("user32.dll")]
-        static extern bool TranslateMessage([In] ref MSG lpMsg);
+        internal static extern bool TranslateMessage([In] ref MSG lpMsg);
 
         [DllImport("user32.dll")]
-        static extern IntPtr DispatchMessage([In] ref MSG lpmsg);
+        internal static extern IntPtr DispatchMessage([In] ref MSG lpmsg);
 
     }
 }
