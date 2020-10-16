@@ -12,4 +12,4 @@ hook.HookGlobal();
 Console.Read();
 ```
 
-Note: Your applicaiton needs a message loop to receive events.
+Note: Your application needs a message loop to receive events.
