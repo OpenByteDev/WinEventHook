@@ -1,11 +1,15 @@
-﻿namespace WinEventHook {
+﻿using System;
+using System.Collections.Generic;
+using WinEventHook.Extensions;
+
+namespace WinEventHook {
     /// <summary>
     /// An event processor that queues incoming events and processes them sequentially avoiding reentrancy in hook functions.
     /// </summary>
     /// <typeparam name="T">The type of the event data that represents a queued event</typeparam>
     public class ReentrancySafeEventProcessor<T> {
 
-        private bool _processing = false;
+        private bool _processing;
         private readonly Queue<T> _eventQueue = new Queue<T>();
         private readonly Action<T> _eventProcessor;
 
