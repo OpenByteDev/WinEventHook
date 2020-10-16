@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net45;net5.0;netstandard2.0</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>Enable</Nullable>
+    <Version>0.1.0</Version>
+    <Authors>OpenByte</Authors>
+    <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/OpenByteDev/WinEventHook</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/OpenByteDev/WinEventHook</RepositoryUrl>
+    <PackageTags>WinEventHook, SetWinEventHook, UnhookWinEvent, Hook, User32</PackageTags>
+    <Description>A managed wrapper over SetWinEventHook and UnhookWinEvent.</Description>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>preview</AnalysisLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
+</Project>
