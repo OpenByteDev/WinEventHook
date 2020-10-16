@@ -52,8 +52,8 @@ namespace WinEventHook {
             HookToProcess((uint) process.Id, throwIfAlreadyHooked, throwOnFailure);
         public bool HookToProcess(uint processId, bool throwIfAlreadyHooked = true, bool throwOnFailure = true) =>
             HookInternal(processId, threadId: AllThreads, throwIfAlreadyHooked, throwOnFailure);
-        public bool HookToThread(Thread thread, bool throwIfAlreadyHooked = true, bool throwOnFailure = true) =>
-            HookToThread((uint) thread.ManagedThreadId, throwIfAlreadyHooked, throwOnFailure);
+        public bool HookToThread(ProcessThread thread, bool throwIfAlreadyHooked = true, bool throwOnFailure = true) =>
+            HookToThread((uint)thread.Id, throwIfAlreadyHooked, throwOnFailure);
         public bool HookToThread(uint threadId, bool throwIfAlreadyHooked = true, bool throwOnFailure = true) =>
             HookInternal(processId: AllProcesses, threadId, throwIfAlreadyHooked, throwOnFailure);
         protected bool HookInternal(uint processId, uint threadId, bool throwIfAlreadyHooked, bool throwOnFailure) {
