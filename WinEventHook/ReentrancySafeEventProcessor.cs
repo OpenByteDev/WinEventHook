@@ -2,7 +2,7 @@
     /// <summary>
     /// An event processor that queues incoming events and processes them sequentially avoiding reentrancy in hook functions.
     /// </summary>
-    /// <typeparam name="T">The type of event data</typeparam>
+    /// <typeparam name="T">The type of the event data that represents a queued event</typeparam>
     public class ReentrancySafeEventProcessor<T> {
 
         private bool _processing = false;
