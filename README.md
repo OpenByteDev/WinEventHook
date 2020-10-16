@@ -11,3 +11,5 @@ hook.WinEventProc += (hWinEventHook, eventType, hwnd, idObject, idChild, dwEvent
 hook.HookGlobal();
 Console.Read();
 ```
+
+Note: Your applicaiton needs a message loop to receive events.
