@@ -47,7 +47,7 @@ namespace WinEventHook {
             get => (_hookFlags & WinEventHookFlags.WINEVENT_SKIPOWNPROCESS) == WinEventHookFlags.WINEVENT_SKIPOWNPROCESS;
             set {
                 if (Hooked)
-                    throw new InvalidOperationException("SkipOwnThread cannot be changed while hooked.");
+                    throw new InvalidOperationException("SkipOwnProcess cannot be changed while hooked.");
                 _hookFlags = value ? _hookFlags | WinEventHookFlags.WINEVENT_SKIPOWNPROCESS : _hookFlags & ~WinEventHookFlags.WINEVENT_SKIPOWNPROCESS;
             }
         }
@@ -62,6 +62,7 @@ namespace WinEventHook {
         /// The handle representing this hook.
         /// </summary>
         public IntPtr RawHookHandle { get; private set; }
+
         private GCHandle _eventProcHandle;
 
         /// <summary>
