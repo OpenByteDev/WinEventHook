@@ -82,48 +82,96 @@ namespace WinEventHook {
         /// <summary>
         /// Attaches the hook to all running processes and threads.
         /// </summary>
-        /// <param name="throwIfAlreadyHooked">Should an exception be thrown if the hook is already in the hooked state.</param>
-        /// <param name="throwOnFailure">Should an exception be thrown if the operation fails.</param>
+        /// <exception cref="InvalidOperationException">If this hook is already hooked.</exception>
+        /// <exception cref="Win32Exception">If an error occured during the operation.</exception>
+        public void HookGlobal() =>
+            HookInternal(processId: AllProcesses, threadId: AllThreads, throwIfAlreadyHooked: true, throwOnFailure: true);
+
+        /// <summary>
+        /// Trys to attach the hook to all running processes and threads.
+        /// </summary>
         /// <returns>A value indication whether the operation completed successfully.</returns>
-        public bool HookGlobal(bool throwIfAlreadyHooked = true, bool throwOnFailure = true) =>
-            HookInternal(processId: AllProcesses, threadId: AllThreads, throwIfAlreadyHooked, throwOnFailure);
+        public bool TryHookGlobal() =>
+            HookInternal(processId: AllProcesses, threadId: AllThreads, throwIfAlreadyHooked: false, throwOnFailure: false);
+
         /// <summary>
         /// Attaches the hook to the specfied process.
         /// </summary>
         /// <param name="process">The process that should be observed.</param>
-        /// <param name="throwIfAlreadyHooked">Should an exception be thrown if the hook is already in the hooked state.</param>
-        /// <param name="throwOnFailure">Should an exception be thrown if the operation fails.</param>
         /// <returns>A value indication whether the operation completed successfully.</returns>
-        public bool HookToProcess(Process process, bool throwIfAlreadyHooked = true, bool throwOnFailure = true) =>
-            HookToProcess((uint)process.Id, throwIfAlreadyHooked, throwOnFailure);
+        /// <exception cref="InvalidOperationException">If this hook is already hooked.</exception>
+        /// <exception cref="Win32Exception">If an error occured during the operation.</exception>
+        public void HookToProcess(Process process) =>
+            HookToProcess((uint)process.Id);
+
+        /// <summary>
+        /// Trys to attach the hook to the specfied process.
+        /// </summary>
+        /// <param name="process">The process that should be observed.</param>
+        public bool TryHookToProcess(Process process) =>
+            TryHookToProcess((uint)process.Id);
+
         /// <summary>
         /// Attaches the hook to the process specfied by the given id.
         /// </summary>
         /// <param name="processId">The id of the process that should be observed.</param>
-        /// <param name="throwIfAlreadyHooked">Should an exception be thrown if the hook is already in the hooked state.</param>
-        /// <param name="throwOnFailure">Should an exception be thrown if the operation fails.</param>
-        /// <returns>A value indication whether the operation completed successfully.</returns>
-        public bool HookToProcess(uint processId, bool throwIfAlreadyHooked = true, bool throwOnFailure = true) =>
-            HookInternal(processId, threadId: AllThreads, throwIfAlreadyHooked, throwOnFailure);
+        /// <exception cref="InvalidOperationException">If this hook is already hooked.</exception>
+        /// <exception cref="Win32Exception">If an error occured during the operation.</exception>
+        public void HookToProcess(uint processId) =>
+            HookInternal(processId, threadId: AllThreads, throwIfAlreadyHooked: true, throwOnFailure: true);
+
+        /// <summary>
+        /// Trys to attach the hook to the process specfied by the given id.
+        /// </summary>
+        /// <param name="processId">The id of the process that should be observed.</param>
+        public bool TryHookToProcess(uint processId) =>
+            HookInternal(processId, threadId: AllThreads, throwIfAlreadyHooked: false, throwOnFailure: false);
+
         /// <summary>
         /// Attaches the hook to the specfied thread.
         /// </summary>
         /// <param name="thread">The thread that should be observed.</param>
-        /// <param name="throwIfAlreadyHooked">Should an exception be thrown if the hook is already in the hooked state.</param>
-        /// <param name="throwOnFailure">Should an exception be thrown if the operation fails.</param>
+        /// <exception cref="InvalidOperationException">If this hook is already hooked.</exception>
+        /// <exception cref="Win32Exception">If an error occured during the operation.</exception>
+        public void HookToThread(ProcessThread thread) =>
+            HookToThread((uint)thread.Id);
+
+        /// <summary>
+        /// Attaches the hook to the specfied thread.
+        /// </summary>
+        /// <param name="thread">The thread that should be observed.</param>
         /// <returns>A value indication whether the operation completed successfully.</returns>
-        public bool HookToThread(ProcessThread thread, bool throwIfAlreadyHooked = true, bool throwOnFailure = true) =>
-            HookToThread((uint)thread.Id, throwIfAlreadyHooked, throwOnFailure);
+        public bool TryHookToThread(ProcessThread thread) =>
+            TryHookToThread((uint)thread.Id);
+
         /// <summary>
         /// Attaches the hook to the thread specfied by the given id.
         /// </summary>
         /// <param name="threadId">The id of the thread that should be observed.</param>
+        /// <exception cref="InvalidOperationException">If this hook is already hooked.</exception>
+        /// <exception cref="Win32Exception">If an error occured during the operation.</exception>
+        public void HookToThread(uint threadId) =>
+            HookInternal(processId: AllProcesses, threadId, throwIfAlreadyHooked: true, throwOnFailure: true);
+
+        /// <summary>
+        /// Attaches the hook to the thread specfied by the given id.
+        /// </summary>
+        /// <param name="threadId">The id of the thread that should be observed.</param>
+        /// <returns>A value indication whether the operation completed successfully.</returns>
+        public bool TryHookToThread(uint threadId) =>
+            HookInternal(processId: AllProcesses, threadId, throwIfAlreadyHooked: false, throwOnFailure: false);
+
+        /// <summary>
+        /// Attaches the hook globally or to the specified thread or process.
+        /// </summary>
+        /// <param name="processId">The id of the process to attach to.</param>
+        /// <param name="threadId">The id of the thread to attach to.</param>
         /// <param name="throwIfAlreadyHooked">Should an exception be thrown if the hook is already in the hooked state.</param>
         /// <param name="throwOnFailure">Should an exception be thrown if the operation fails.</param>
         /// <returns>A value indication whether the operation completed successfully.</returns>
-        public bool HookToThread(uint threadId, bool throwIfAlreadyHooked = true, bool throwOnFailure = true) =>
-            HookInternal(processId: AllProcesses, threadId, throwIfAlreadyHooked, throwOnFailure);
-        protected bool HookInternal(uint processId, uint threadId, bool throwIfAlreadyHooked, bool throwOnFailure) {
+        /// <exception cref="InvalidOperationException">If this hook is already hooked and <paramref name="throwIfAlreadyHooked"/> is true.</exception>
+        /// <exception cref="Win32Exception">If an error occured during the operation and <paramref name="throwOnFailure"/> is true.</exception>
+        internal bool HookInternal(uint processId = AllProcesses, uint threadId = AllThreads, bool throwIfAlreadyHooked = true, bool throwOnFailure = true) {
             if (Hooked) {
                 if (throwIfAlreadyHooked)
                     throw new InvalidOperationException("Hook is already hooked.");
@@ -156,10 +204,27 @@ namespace WinEventHook {
         /// <summary>
         /// Detaches the hook from wherever it is attached to.
         /// </summary>
+        /// <exception cref="InvalidOperationException">If this hook is already unhooked.</exception>
+        /// <exception cref="Win32Exception">If an error occured during the operation.</exception>
+        public bool Unhook() =>
+            UnhookInternal(throwIfNotHooked: true, throwOnFailure: true);
+
+        /// <summary>
+        /// Detaches the hook from wherever it is attached to.
+        /// </summary>
+        /// <returns>A value indication whether the operation completed successfully.</returns>
+        public bool TryUnhook() =>
+            UnhookInternal(throwIfNotHooked: false, throwOnFailure: false);
+
+        /// <summary>
+        /// Detaches the hook from wherever it is attached to.
+        /// </summary>
         /// <param name="throwIfNotHooked">Should an exception be thrown if the hook is not in the hooked state.</param>
         /// <param name="throwOnFailure">Should an exception be thrown if the operation fails.</param>
         /// <returns>A value indication whether the operation completed successfully.</returns>
-        public bool Unhook(bool throwIfNotHooked = true, bool throwOnFailure = true) {
+        /// <exception cref="InvalidOperationException">If this hook is already unhooked and <paramref name="throwIfNotHooked"/> is true.</exception>
+        /// <exception cref="Win32Exception">If an error occured during the operation and <paramref name="throwOnFailure"/> is true.</exception>
+        internal bool UnhookInternal(bool throwIfNotHooked = true, bool throwOnFailure = true) {
             if (!Hooked) {
                 if (throwIfNotHooked)
                     throw new InvalidOperationException("Hook is not hooked.");
@@ -187,28 +252,27 @@ namespace WinEventHook {
             EventReceived?.Invoke(this, new WinEventHookEventArgs(hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwmsEventTime));
         }
 
+
         #region IDisposable
         private bool _disposed;
         protected virtual void Dispose(bool disposing) {
             if (!_disposed) {
                 if (disposing) {
-                    // dispose managed state
+                    // no managed state to dispose...
                 }
 
                 // free unmanaged resources
-                Unhook(throwIfNotHooked: false, throwOnFailure: false);
+                UnhookInternal(throwIfNotHooked: false, throwOnFailure: false);
 
                 _disposed = true;
             }
         }
 
         ~WindowEventHook() {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: false);
         }
 
         public void Dispose() {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
