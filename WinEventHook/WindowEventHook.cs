@@ -248,8 +248,8 @@ namespace WinEventHook {
         }
 
         protected virtual void OnWinEventProc(IntPtr hWinEventHook, WindowEvent eventType, IntPtr hwnd, AccessibleObjectID idObject, int idChild, uint dwEventThread, uint dwmsEventTime) {
-            if (hWinEventHook != RawHookHandle)
-                return;
+            // if (hWinEventHook != RawHookHandle)
+            //    return;
 
             // WinEventProc?.Invoke(hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwEventThread);
             EventReceived?.Invoke(this, new WinEventHookEventArgs(hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwmsEventTime));
@@ -337,7 +337,7 @@ namespace WinEventHook {
         /// <summary>
         /// A value indicating whether the event was triggered by given object (not a child).
         /// </summary>
-        public bool IsOwnEvent => ChildId != CHILDID_SELF;
+        public bool IsOwnEvent => ChildId == CHILDID_SELF;
 
         public WinEventHookEventArgs(IntPtr hookHandle, WindowEvent eventType, IntPtr windowHandle, AccessibleObjectID objectId, int childId, uint eventThreadId, uint eventTime) {
             HookHandle = hookHandle;
