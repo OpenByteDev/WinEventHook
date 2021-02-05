@@ -6,9 +6,8 @@ namespace WinEventHook.Test {
         public static void Main() {
             // hook logic
             using var hook = new WindowEventHook(WindowEvent.EVENT_MIN, WindowEvent.EVENT_MAX);
-            hook.EventReceived += (s, e) => {
+            hook.EventReceived += (s, e) =>
                 Console.WriteLine(Enum.GetName(typeof(WindowEvent), e.EventType));
-            };
             hook.HookGlobal();
 
             // simple message loop
@@ -47,6 +46,5 @@ namespace WinEventHook.Test {
 
         [DllImport("user32.dll")]
         internal static extern IntPtr DispatchMessage([In] ref MSG lpmsg);
-
     }
 }

@@ -252,7 +252,6 @@ namespace WinEventHook {
             EventReceived?.Invoke(this, new WinEventHookEventArgs(hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwmsEventTime));
         }
 
-
         #region IDisposable
         private bool _disposed;
         protected virtual void Dispose(bool disposing) {
@@ -277,7 +276,6 @@ namespace WinEventHook {
             GC.SuppressFinalize(this);
         }
         #endregion
-
     }
 
     public sealed class WinEventHookEventArgs : EventArgs {
