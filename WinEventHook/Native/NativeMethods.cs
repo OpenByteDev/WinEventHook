@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace WinEventHook {
     internal static class NativeMethods {
-
         /// <summary>
         /// Sets an event hook function for a range of events.
         /// </summary>
@@ -28,6 +27,5 @@ namespace WinEventHook {
         /// <see href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwinevent"/>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool UnhookWinEvent(IntPtr hWinEventHook);
-
     }
 }
