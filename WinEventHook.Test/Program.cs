@@ -6,8 +6,8 @@ namespace WinEventHook.Test {
         public static void Main() {
             // hook logic
             using var hook = new WindowEventHook(WindowEvent.EVENT_MIN, WindowEvent.EVENT_MAX);
-            hook.WinEventProc += (hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwmsEventTime) => {
-                Console.WriteLine(eventType);
+            hook.EventReceived += (s, e) => {
+                Console.WriteLine(Enum.GetName(typeof(WindowEvent), e.EventType));
             };
             hook.HookGlobal();
 
