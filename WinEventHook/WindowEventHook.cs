@@ -332,7 +332,7 @@ namespace WinEventHook {
         /// A value indicating whether the event was triggered by a child of the given object.
         /// The child can be identified via <see cref="ChildId"/>.
         /// </summary>
-        public bool IsChildEvent => !IsChildEvent;
+        public bool IsChildEvent => !IsOwnEvent;
 
         /// <summary>
         /// A value indicating whether the event was triggered by given object (not a child).
