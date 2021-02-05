@@ -17,11 +17,11 @@ Install-Package WinEventHook
 Prints all events to the console:
 ```cs
 using var hook = new WindowEventHook();
-hook.WinEventProc += (hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwmsEventTime) => {
-    Console.WriteLine(eventType);
-};
+hook.EventReceived += (s, e) =>
+    Console.WriteLine(Enum.GetName(typeof(WindowEvent), e.EventType));
 hook.HookGlobal();
 Console.Read();
 ```
 
 Note: Your application needs a message loop to receive events.
+
