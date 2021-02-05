@@ -231,17 +231,20 @@ namespace WinEventHook {
                 return true;
             }
 
+            // we need to unhook before freeing our callback in case an event sneaks in at the right time.
+            var result = UnhookWinEvent(RawHookHandle);
+
+            // we assume that if unhooking failed we still want to free the handle.
             if (_eventProcHandle.IsAllocated)
                 _eventProcHandle.Free();
 
-            if (UnhookWinEvent(RawHookHandle)) {
-                Hooked = false;
-                return true;
-            } else {
-                if (throwOnFailure)
-                    throw new Win32Exception();
-                return false;
-            }
+            // we assume that we are no longer hooked even after unhooking failed.
+            Hooked = false;
+
+            if (!result && throwOnFailure)
+                throw new Win32Exception();
+
+            return result;
         }
 
         protected virtual void OnWinEventProc(IntPtr hWinEventHook, WindowEvent eventType, IntPtr hwnd, AccessibleObjectID idObject, int idChild, uint dwEventThread, uint dwmsEventTime) {
