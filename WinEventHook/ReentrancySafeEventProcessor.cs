@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using WinEventHook.Extensions;
 
 namespace WinEventHook {
@@ -8,8 +9,10 @@ namespace WinEventHook {
     /// </summary>
     /// <typeparam name="T">The type of the event data that represents a queued event</typeparam>
     public class ReentrancySafeEventProcessor<T> {
+        private const int Processing = 1;
+        private const int Idle = 0;
 
-        private bool _processing;
+        private int _processing = Idle;
         private readonly Queue<T> _eventQueue = new Queue<T>();
         private readonly Action<T> _eventProcessor;
 
@@ -26,27 +29,33 @@ namespace WinEventHook {
         /// </summary>
         /// <param name="eventData">An object representing the event</param>
         public void EnqueueAndProcess(T eventData) {
-            // check if already executing
-            if (_processing) {
-                // some call already reached processing.
-                _eventQueue.Enqueue(eventData);
+            // add event data to queue.
+            _eventQueue.Enqueue(eventData);
+
+            // check if already executing and start processing if this is the first call.
+            if (Interlocked.Exchange(ref _processing, Processing) == Processing) {
+                // some call already reached processing and will handle our event.
                 return;
             }
 
-            // first call, so we start executing
-            _processing = true;
+            // process queued events
+            ProcessQueue();
+        }
 
+        private void ProcessQueue() {
             try {
-                // process own event data
-                _eventProcessor(eventData);
-
                 // process queued events
                 while (_eventQueue.TryDequeue(out var data)) {
                     _eventProcessor(data);
                 }
             } finally {
-                // stop executing
-                _processing = false;
+                // stop processing
+                _processing = Idle;
+
+                // if someone added an event after we finished and nobody has started processing yet we start again.
+                if (!_eventQueue.IsEmpty() && Interlocked.Exchange(ref _processing, Processing) == Processing) {
+                    ProcessQueue();
+                }
             }
         }
 

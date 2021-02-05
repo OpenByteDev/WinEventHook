@@ -2,7 +2,6 @@
 
 namespace WinEventHook.Extensions {
     internal static class QueueExtensions {
-
 #if NET45 || NETSTANDARD2_0
         public static bool TryDequeue<T>(this Queue<T> queue, out T result) {
             if (queue.Count == 0) {
@@ -15,5 +14,6 @@ namespace WinEventHook.Extensions {
         }
 #endif
 
+        public static bool IsEmpty<T>(this Queue<T> queue) => queue.Count == 0;
     }
 }
