@@ -258,11 +258,6 @@ namespace WinEventHook {
         private bool _disposed;
         protected virtual void Dispose(bool disposing) {
             if (!_disposed) {
-                if (disposing) {
-                    // no managed state to dispose...
-                }
-
-                // free unmanaged resources
                 UnhookInternal(throwIfNotHooked: false, throwOnFailure: false);
 
                 _disposed = true;
