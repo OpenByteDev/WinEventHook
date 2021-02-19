@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using static WinEventHook.NativeMethods;
 
 namespace WinEventHook {
@@ -25,7 +24,7 @@ namespace WinEventHook {
         /// <summary>
         /// A value indicating whether the hook is currently attached.
         /// </summary>
-        public bool Hooked { get; private set; }
+        public bool Hooked => RawHookHandle != IntPtr.Zero;
 
         /// <summary>
         /// A value indicating whether the hook should observe events originating from the current thread.
@@ -59,7 +58,7 @@ namespace WinEventHook {
         /// <summary>
         /// The handle representing this hook.
         /// </summary>
-        public IntPtr RawHookHandle { get; private set; }
+        public IntPtr RawHookHandle { get; private set; } = IntPtr.Zero;
 
         private WinEventProc? eventHandler;
 
@@ -190,7 +189,6 @@ namespace WinEventHook {
             );
 
             if (RawHookHandle != IntPtr.Zero) {
-                Hooked = true;
                 return true;
             } else {
                 eventHandler = null;
@@ -233,9 +231,6 @@ namespace WinEventHook {
             // we need to unhook before freeing our callback in case an event sneaks in at the right time.
             var result = UnhookWinEvent(RawHookHandle);
 
-
-            // we assume that we are no longer hooked even after unhooking failed.
-            Hooked = false;
             eventHandler = null;
             RawHookHandle = IntPtr.Zero;
 
@@ -246,7 +241,7 @@ namespace WinEventHook {
         }
 
         protected virtual void OnWinEventProc(IntPtr hWinEventHook, WindowEvent eventType, IntPtr hwnd, AccessibleObjectID idObject, int idChild, uint dwEventThread, uint dwmsEventTime) {
-            if (hWinEventHook != RawHookHandle)
+            if (hWinEventHook != RawHookHandle || RawHookHandle == IntPtr.Zero)
                return;
 
             EventReceived?.Invoke(this, new WinEventHookEventArgs(hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwmsEventTime));
