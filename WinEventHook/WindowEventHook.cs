@@ -61,7 +61,7 @@ namespace WinEventHook {
         /// </summary>
         public IntPtr RawHookHandle { get; private set; }
 
-        private GCHandle _eventProcHandle;
+        private WinEventProc? eventHandler;
 
         /// <summary>
         /// Creates a new hook that listens to all events.
@@ -178,13 +178,12 @@ namespace WinEventHook {
                 return true;
             }
 
-            var eventProc = new WinEventProc(OnWinEventProc);
-            _eventProcHandle = GCHandle.Alloc(eventProc);
+            eventHandler = new WinEventProc(OnWinEventProc);
             RawHookHandle = SetWinEventHook(
                 eventMin: EventMin,
                 eventMax: EventMax,
                 hmodWinEventProc: IntPtr.Zero,
-                lpfnWinEventProc: eventProc,
+                lpfnWinEventProc: eventHandler,
                 idProcess: processId,
                 idThread: threadId,
                 dwFlags: _hookFlags
@@ -194,7 +193,7 @@ namespace WinEventHook {
                 Hooked = true;
                 return true;
             } else {
-                _eventProcHandle.Free();
+                eventHandler = null;
                 if (throwOnFailure)
                     throw new Win32Exception();
                 return false;
@@ -234,12 +233,11 @@ namespace WinEventHook {
             // we need to unhook before freeing our callback in case an event sneaks in at the right time.
             var result = UnhookWinEvent(RawHookHandle);
 
-            // we assume that if unhooking failed we still want to free the handle.
-            if (_eventProcHandle.IsAllocated)
-                _eventProcHandle.Free();
 
             // we assume that we are no longer hooked even after unhooking failed.
             Hooked = false;
+            eventHandler = null;
+            RawHookHandle = IntPtr.Zero;
 
             if (!result && throwOnFailure)
                 throw new Win32Exception();
