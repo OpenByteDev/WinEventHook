@@ -1,6 +1,6 @@
 # WinEventHook
 
-[![nuget badge](https://badgen.net/nuget/v/wineventhook)](https://www.nuget.org/packages/WinEventHook/0.2.0)
+[![nuget badge](https://badgen.net/nuget/v/wineventhook)](https://www.nuget.org/packages/WinEventHook/)
 [![Unlicense](https://img.shields.io/github/license/OpenByteDev/WinEventHook)](./LICENSE)
 
 A managed wrapper over [SetWinEventHook](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwineventhook) and [UnhookWinEvent](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwinevent).
