@@ -104,13 +104,6 @@ namespace WinEventHook {
             HookToProcess((uint)process.Id);
 
         /// <summary>
-        /// Trys to attach the hook to the specfied process.
-        /// </summary>
-        /// <param name="process">The process that should be observed.</param>
-        public bool TryHookToProcess(Process process) =>
-            TryHookToProcess((uint)process.Id);
-
-        /// <summary>
         /// Attaches the hook to the process specfied by the given id.
         /// </summary>
         /// <param name="processId">The id of the process that should be observed.</param>
@@ -118,6 +111,13 @@ namespace WinEventHook {
         /// <exception cref="Win32Exception">If an error occured during the operation.</exception>
         public void HookToProcess(uint processId) =>
             HookInternal(processId, threadId: AllThreads, throwIfAlreadyHooked: true, throwOnFailure: true);
+
+        /// <summary>
+        /// Trys to attach the hook to the specfied process.
+        /// </summary>
+        /// <param name="process">The process that should be observed.</param>
+        public bool TryHookToProcess(Process process) =>
+            TryHookToProcess((uint)process.Id);
 
         /// <summary>
         /// Trys to attach the hook to the process specfied by the given id.
@@ -136,14 +136,6 @@ namespace WinEventHook {
             HookToThread((uint)thread.Id);
 
         /// <summary>
-        /// Attaches the hook to the specfied thread.
-        /// </summary>
-        /// <param name="thread">The thread that should be observed.</param>
-        /// <returns>A value indication whether the operation completed successfully.</returns>
-        public bool TryHookToThread(ProcessThread thread) =>
-            TryHookToThread((uint)thread.Id);
-
-        /// <summary>
         /// Attaches the hook to the thread specfied by the given id.
         /// </summary>
         /// <param name="threadId">The id of the thread that should be observed.</param>
@@ -151,6 +143,14 @@ namespace WinEventHook {
         /// <exception cref="Win32Exception">If an error occured during the operation.</exception>
         public void HookToThread(uint threadId) =>
             HookInternal(processId: AllProcesses, threadId, throwIfAlreadyHooked: true, throwOnFailure: true);
+
+        /// <summary>
+        /// Attaches the hook to the specfied thread.
+        /// </summary>
+        /// <param name="thread">The thread that should be observed.</param>
+        /// <returns>A value indication whether the operation completed successfully.</returns>
+        public bool TryHookToThread(ProcessThread thread) =>
+            TryHookToThread((uint)thread.Id);
 
         /// <summary>
         /// Attaches the hook to the thread specfied by the given id.
